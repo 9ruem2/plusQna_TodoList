@@ -9,10 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 
-/**
- * TODO
- * - Java의 패키지 명은 exceptionAdvice와 같이 카멜케이스로 이름짓지 않습니다. exception_advice라고 지어주세요.
- */
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
     @ExceptionHandler

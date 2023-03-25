@@ -17,23 +17,17 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-/**
- * TODO
- * - `Board`라는 네이밍이 적절하지 않은 것 같습니다. REST API 애플리케이션에서는 Controller가 일종의 리소스를 제공하는
- * API 엔드포인트 역할을 하는데 어떤 리소스를 제공하는지 구체적이지 않기 때문에 네이밍을 변경하는게 좋을 것 같습니다.
- */
 @RestController // @Controller와 @ResponsBody의 동작을 하나로 결합한 편의 컨트롤러, 모든 핸들러 메소드에서 @ResponseBody를 사용할 필요가 없다는 것입니다.
 @RequestMapping("/qnaForum")
 @Validated //유효성검사 시 필요
 @Slf4j
 @RequiredArgsConstructor //final이 붙어있는 애들만 빈으로 인식 필요한 애들만 생성자를 만들어줌 따라서 컨트롤러에서는 @RAC~~
 public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야 함.
-    private final QnaForumMapper mapper; //의존성주입때문에 스프링 컨테이너가 매퍼랑 보드서비스를 빈의 형태로 가지고 있는건데 어떤객체에 연결을 해줘야할지 몰라서 에러가 나고있는 상황
+    private final QnaForumMapper mapper;
     private final QnaForumService qnaForumService;
     private final MemberService memberService;
 
-    /**
-     * TODO
+    /*
      * - 질문 등록이 이 쪽 Controller에서 처리한다고 해서 애플리케이션이 안돌아가는건 아닙니다. 다만, 질문이라는 리소스 자체가 단순히
      * 다른 리소스와 관련이 없는 독립적인 리소스가 아니라 특정 회원이 질문을 등록하는 것이기 때문에 MemberController에서 요청을 처리하는 것이
      * REST API 리소스 관점에서 더 자연스럽습니다.
@@ -50,10 +44,10 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
                 mapper.qnaForumPostDtoToQnaForum(qnaForumPostDto), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{board-id}")
-    public ResponseEntity patchQnaForum(@PathVariable("board-id") @Positive Long boardId, // TODO path variable에서 추출되는(extract)를 사용하세요.
+    @PatchMapping("/{qnaForum-id}")
+    public ResponseEntity patchQnaForum(@PathVariable("qnaForum-id") @Positive Long qnaForumId, // TODO path variable에서 추출되는(extract)를 사용하세요. -> 얘를 어떻게할까?
                                         @Valid @RequestBody QnaForumDto.Patch qnaForumPatchDto){
-    //Dto를 mapper로 바꿔서 service로직에서 UpdateBoard()를 실행
+    // Dto를 mapper로 바꿔서 service로직에서 UpdateBoard()를 실행
         QnaForum qnaForum = mapper.qnaForumPatchDtoToQnaForum(qnaForumPatchDto);
         QnaForum patchQnaForum = qnaForumService.updateBoard(qnaForum);
         return new ResponseEntity<>(mapper.qnaForumToQnaForumSingleResponseDto(patchQnaForum), HttpStatus.OK);
@@ -87,11 +81,11 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
 
         // 비밀글 이라면 질문을 등록한 회원과 관리자만 조회할 수 있다.
         // 게시글이 공개인지, 비공개인지 확인->공개글이라면 회원과 관리자 모두 조회할 수 있다.
-        /**
+        /*
          * TODO
          * - getXXXX 은 일반적으로 데이터를 조회할 때 사용하는데 여기서는 상태를 검증하는 용도로만 사용하고 있어서 적절한 네이밍이 아닌 것 같습니다.
          */
-        qnaForumService.getArticle(findQnaForum);
+        qnaForumService.isSecret(findQnaForum);
 
         //1건의 질문 조회 시 질문에 대한 답변이 존재한다면 답변도 함께 조회되어야 한다.
         //1:1 = 하나의 게시글에는 하나의 답변만 받을 수 있다 (Frequently Asked Questions, FAQ, 자주묻는 질문과 답변)
@@ -127,11 +121,12 @@ public ResponseEntity getOrders(@Positive @RequestParam int page,
     @GetMapping
     public ResponseEntity getQnaForums(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size){
-        Page<QnaForum> pageBoards = qnaForumService.findBoards(page -1, size);
-        List<QnaForum> QnaForums = pageBoards.getContent();
+        Page<QnaForum> pageBoards = qnaForumService.findBoards(page -1, size); //페이지정보
+        List<QnaForum> QnaForums = pageBoards.getContent(); //게시글이 여러개 담겨있음
 
-        return new ResponseEntity<>(new QnaForumDto.MultiResponse<>(
-                mapper.qnaForumsToQnaForumsResponseDtos(QnaForums), pageBoards),HttpStatus.OK); // 모르겠음
+        return new ResponseEntity<>(
+                new QnaForumDto.MultiResponse<>(mapper.qnaForumsToQnaForumsResponseDtos(QnaForums),pageBoards)
+                                                ,HttpStatus.OK);
     }
 
 

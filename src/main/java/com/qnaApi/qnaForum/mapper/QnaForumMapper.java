@@ -11,23 +11,25 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface QnaForumMapper {
-    @Mapping(source = "memberId" ,target = "member.memberId") //소스:포스트DTO -> board// memberId->
+    @Mapping(source = "memberId", target = "member.memberId")
+        //소스:포스트DTO -> board// memberId->
     QnaForum qnaForumPostDtoToQnaForum(QnaForumDto.Post qnaForumPostDto);
+
     @Mapping(source = "memberId", target = "member.memberId")
     QnaForum qnaForumPatchDtoToQnaForum(QnaForumDto.Patch qnaForumPatchDto);
 
     @Mapping(source = "memberId", target = "member.memberId")
     QnaForum qnaForumDeleteDtoToQnaForum(QnaForumDto.Delete qnAForumDeleteDto);
 
-    default QnaForumDto.SingleResponse qnaForumToQnaForumSingleResponseDto(QnaForum response){
+    default QnaForumDto.SingleResponse qnaForumToQnaForumSingleResponseDto(QnaForum response) {
         QnaForumDto.SingleResponse qnaForumResponseDto = new QnaForumDto.SingleResponse();
         AnswerResponseDto answerResponseDto = new AnswerResponseDto();
-        if(response.getAnswer()==null){
+        if (response.getAnswer() == null) {
             answerResponseDto.setBoardId(null);
             answerResponseDto.setComment("empty answer");
             answerResponseDto.setMemberId(null);
             answerResponseDto.setAnswerId(null);
-        }else{
+        } else {
             Answer answer = response.getAnswer();
             answerResponseDto.setAnswerId(answer.getAnswerId());
             answerResponseDto.setBoardId(answer.getQnaForum().getQnaForumId());
@@ -42,8 +44,7 @@ public interface QnaForumMapper {
         return qnaForumResponseDto;
     }
 
+    List<QnaForumDto.SingleResponse> qnaForumsToQnaForumsResponseDtos(List<QnaForum> qnaForums);
 
-    QnaForumDto.MultiResponse<QnaForumDto.SingleResponse> qnaForumToQnaForumMultiResponsDto(QnaForum qnaForum); //qnaForum을 페이징이 된 리스트를 받았을 때 (findAll())
 
-    //Object qnaForumsToQnaForumsResponseDtos(List<QnaForum> qnaForums);
 }

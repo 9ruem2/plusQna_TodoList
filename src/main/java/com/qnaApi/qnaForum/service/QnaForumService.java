@@ -86,21 +86,20 @@ public class QnaForumService {
 //    게시글이 공개인지, 비공개인지 확인하기
     public boolean getPublicationStatus (QnaForum qnaForum){
         boolean boardSecret = false;
-        if (qnaForum.getContentStatus().equals(qnaForum.ContentStatus.SECRET)) {
+        if (qnaForum.getContentStatus().equals(QnaForum.ContentStatus.SECRET)) {
             return boardSecret = true; // 게시글 = 비공개 상태
         }
         return boardSecret;
     }
 
-    /**
+    /*
      * TODO
      * - 게시글이라는 의미로 Article의 의미를 잘 모르겠네요. 질문을 의미하는 것 같긴한데..
      * @param qnaForum
      */
         //1건의 게시글을 조회하는 메서드
-    public void getArticle (QnaForum qnaForum){
-        // TODO boolean을 반환 받는다면 isSecret이 더 적절할 것 같네요.
-        boolean boardSecret = getPublicationStatus(qnaForum); // TODO publication이라는 용어가 좀 어색합니다.
+    public void isSecret(QnaForum qnaForum){
+        boolean boardSecret = getPublicationStatus(qnaForum);
         if (boardSecret) {
             // 게시글이 비공개 상태라면
             // 게시글을 조회하려는 사람의 memberId와 저장되어있는 게시글을 작성한 memberId가 같은지 확인하기
@@ -108,7 +107,7 @@ public class QnaForumService {
         }
     }
 
-        //  1건의 질문 조회 시 질문에 대한 답변이 존재한다면 답변도 함께 조회되어야 한다.
+//  1건의 질문 조회 시 질문에 대한 답변이 존재한다면 답변도 함께 조회되어야 한다.
     public Page<QnaForum> findBoards (int page, int size){
         return boardRepository.findAll(PageRequest.of(page, size,
                 Sort.by("boardId").descending())); //보드id를 기준으로 내림차순으로 보드를 정렬해서 해당하는 페이지에 대한 정보를 넘겨줌
