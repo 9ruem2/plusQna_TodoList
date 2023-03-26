@@ -35,7 +35,7 @@ public class QnaForumService {
     // 게시글수정하기 로직
     // 세부동작들은 클래스를 하나 만들어주고 하는게 좋음 (이유는? 코드의 가독성과 재사용을 위해서)
     public QnaForum updateBoard(QnaForum qnaForum){ // 보드에서 업데이트하라는 요청이 왔을 때 받아주는 역할을 하는 로직으로 쓰임
-        QnaForum updatedQnaForum = boardManager.boardUpdater(qnaForum);
+        QnaForum updatedQnaForum = boardManager.qnaForumUpdater(qnaForum);
         // 게시글 저장하기
         return saveBoard(updatedQnaForum);
     }
@@ -103,7 +103,7 @@ public class QnaForumService {
         if (boardSecret) {
             // 게시글이 비공개 상태라면
             // 게시글을 조회하려는 사람의 memberId와 저장되어있는 게시글을 작성한 memberId가 같은지 확인하기
-            boardManager.checkNotExistBoard(qnaForum);
+            boardManager.checkNotExistQnaForum(qnaForum);
         }
     }
 

@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 public class AnswerService {
     private final AnswerRepository answerRepository;
     private final MemberRepository memberRepository;
-    private final BoardRepository boardRepository;
-
     public Answer createAnswer(Answer answer){
         //
         return answerRepository.save(answer);

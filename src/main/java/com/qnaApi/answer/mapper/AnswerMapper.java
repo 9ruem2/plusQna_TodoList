@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AnswerMapper {
     @Mapping(source = "memberId", target = "member.memberId")
-    @Mapping(source = "boardId", target = "board.boardId")
+    @Mapping(source = "qnaForumId", target = "qnaForum.qnaForumId")
     public Answer answerPostDtoToAnswer(AnswerPostDto answerPostDto);
 
     @Mapping(source = "answer.member.memberId", target = "memberId")
-    @Mapping(source = "answer.board.boardId", target = "boardId")
+    @Mapping(source = "answer.qnaForum.qnaForumId", target = "qnaForumId")
     AnswerResponseDto AnswerToAnswerResponseDto(Answer answer);
 }

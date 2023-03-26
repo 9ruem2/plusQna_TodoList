@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class AnswerPostDto {
     private String comment;
-    private Long boardId;
+    private Long qnaForumId;
     private Long memberId;
 }

@@ -10,6 +10,6 @@ public class AnswerResponseDto {
     private String comment;
 
     private Long memberId;
-    private Long boardId;
+    private Long qnaForumId;
 
 }

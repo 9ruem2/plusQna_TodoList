@@ -25,14 +25,14 @@ public interface QnaForumMapper {
         QnaForumDto.SingleResponse qnaForumResponseDto = new QnaForumDto.SingleResponse();
         AnswerResponseDto answerResponseDto = new AnswerResponseDto();
         if (response.getAnswer() == null) {
-            answerResponseDto.setBoardId(null);
+            answerResponseDto.setQnaForumId(null);
             answerResponseDto.setComment("empty answer");
             answerResponseDto.setMemberId(null);
             answerResponseDto.setAnswerId(null);
         } else {
             Answer answer = response.getAnswer();
             answerResponseDto.setAnswerId(answer.getAnswerId());
-            answerResponseDto.setBoardId(answer.getQnaForum().getQnaForumId());
+            answerResponseDto.setQnaForumId(answer.getQnaForum().getQnaForumId());
             answerResponseDto.setMemberId(answer.getMember().getMemberId());
             answerResponseDto.setComment(answer.getComment());
         }

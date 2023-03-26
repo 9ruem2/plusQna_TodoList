@@ -45,7 +45,7 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
     }
 
     @PatchMapping("/{qnaForum-id}")
-    public ResponseEntity patchQnaForum(@PathVariable("qnaForum-id") @Positive Long qnaForumId, // TODO path variable에서 추출되는(extract)를 사용하세요. -> 얘를 어떻게할까?
+    public ResponseEntity patchQnaForum(@PathVariable("qnaForum-id") @Positive Long qnaForumId, // TODO path variable에서 추출되는(extract)를 사용하세요.-> PatchDto에서 보드아이디를 지워도 됨
                                         @Valid @RequestBody QnaForumDto.Patch qnaForumPatchDto){
     // Dto를 mapper로 바꿔서 service로직에서 UpdateBoard()를 실행
         QnaForum qnaForum = mapper.qnaForumPatchDtoToQnaForum(qnaForumPatchDto);
@@ -62,16 +62,16 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
  */
 
     /**
-     * TODO
+     * TODO 하기나름
      * - BoardService에서 해야 될 일들은 BoardService 내부에서 처리하는 것이 좋습니다. 현재는 isDeleted(), getArticle() 같은
      *  메서드가 Controller에서 호출하는데 BoardService 내부에서 동작을 수행하는 것이 좋습니다.
      * // @param qnaForumId
      * // @param qnAForumGetDto
      * // @return
      */
-    @GetMapping("/{qnaForumId}/{memberId}")
+    @GetMapping("/{qnaForumId}")
     public ResponseEntity getQnaForum(@PathVariable ("qnaForumId") Long qnaForumId,
-                                      @Positive @RequestParam Long memberId){
+                                      @Positive @RequestParam(name="Id") Long memberId){
         QnaForum findQnaForum = qnaForumService.findVerifiedBoard(qnaForumId);
         //Board board = boardService.findVerifiedBoard();
 
@@ -81,10 +81,6 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
 
         // 비밀글 이라면 질문을 등록한 회원과 관리자만 조회할 수 있다.
         // 게시글이 공개인지, 비공개인지 확인->공개글이라면 회원과 관리자 모두 조회할 수 있다.
-        /*
-         * TODO
-         * - getXXXX 은 일반적으로 데이터를 조회할 때 사용하는데 여기서는 상태를 검증하는 용도로만 사용하고 있어서 적절한 네이밍이 아닌 것 같습니다.
-         */
         qnaForumService.isSecret(findQnaForum);
 
         //1건의 질문 조회 시 질문에 대한 답변이 존재한다면 답변도 함께 조회되어야 한다.
@@ -97,7 +93,7 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
 /*
 등록한 여러 건의 질문을 조회하는 기능
 - 여러 건의 질문 목록은 회원(고객)과 관리자 모두 조회할 수 있다.
-- 삭제 상태가 아닌 질문만 조회할 수 있다. //Fixme
+
 - 여러 건의 질문 목록에서 각각의 질문에 답변이 존재한다면 답변도 함께 조회 할수있어야한다.
 - 여러 건의 질문 목록은 페이지네이션 처리가 되어 일정 건수 만큼의 데이터만 조회할 수 있어야 한다.
 - 여러 건의 질문 목록은 아래의 조건으로 정렬해서 조회할 수 있어야 한다.
@@ -123,7 +119,7 @@ public ResponseEntity getOrders(@Positive @RequestParam int page,
                                        @Positive @RequestParam int size){
         Page<QnaForum> pageBoards = qnaForumService.findBoards(page -1, size); //페이지정보
         List<QnaForum> QnaForums = pageBoards.getContent(); //게시글이 여러개 담겨있음
-
+       // - 삭제 상태가 아닌 질문만 조회할 수 있다. //Fixme
         return new ResponseEntity<>(
                 new QnaForumDto.MultiResponse<>(mapper.qnaForumsToQnaForumsResponseDtos(QnaForums),pageBoards)
                                                 ,HttpStatus.OK);
