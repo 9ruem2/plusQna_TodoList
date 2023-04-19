@@ -20,7 +20,6 @@ public class BoardManager {
     // private final BoardService boardService; 양방향에서 주입할수가 x 그래서 매니저에서는 서비스를 생성자주입을 하면 안됨
     private final BoardRepository boardRepository;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
 
 
@@ -82,7 +81,7 @@ public class BoardManager {
         Member findMember = memberService.findVerifiedMember(customerMemberId); // 멤버아이디를 통해 memberRepository에 저장된 멤버객체를 가져옴
         List<QnaForum> qnaForumList = findMember.getQnaForums(); // 업데이트를 요청한 멤버(findMember)가 작성했던 bordList들을 전부 가져옴
 
-        /**
+         /*
          * TODO 보드가 있는지 없는지 쿼리문으로 쿼리문으로 회원정보를 받고 그 회원의 보드정보를 가져옴 그래서 ID로 있는지 확인만 하면됨
          * - 왜 회원이 여태까지 등록한 모든 질문을 가져와서 boardId를 검증하는지 모르겠네요.
          *  업데이트 하려는 boardId로 DB에서 조회해서 있는지 없는지만 확인하면 될것 같은데요.

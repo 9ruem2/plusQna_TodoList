@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class) //엔티티 클래스에 리스너를 추가
-
-
 public abstract class Auditable {
     @CreatedDate// 엔티티가 생성된 날짜를 필드값에 추가
     @Column(name ="created_at",updatable = false)// 컬럼명은 created_at, 업데이트는 안되게
@@ -29,7 +27,7 @@ public abstract class Auditable {
     @Column(name="LAST_MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
-    @CreatedBy // 엔티티를 생성한 주체를 필드에 추가해줌
+    @CreatedBy // 엔티티를 생성한 주체를 필드에 추가해줌 // 정식님 이름이 들어갔었음
     @Column(updatable = false) //업데이트는 할수없음
     private String createdBy;
 

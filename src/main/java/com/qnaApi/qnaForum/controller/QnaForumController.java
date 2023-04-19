@@ -41,7 +41,7 @@ public class QnaForumController { //쉬프트 + F6 선언한 곳에서 바꿔야
     public ResponseEntity postQnaForum(@Valid @RequestBody QnaForumDto.Post qnaForumPostDto){
         QnaForum qnaForum = qnaForumService.createBoard(mapper.qnaForumPostDtoToQnaForum(qnaForumPostDto));
         return new ResponseEntity<>(
-                mapper.qnaForumPostDtoToQnaForum(qnaForumPostDto), HttpStatus.CREATED);
+                mapper.qnaForumToQnaForumSingleResponseDto(qnaForum), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{qnaForum-id}")
